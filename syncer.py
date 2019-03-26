@@ -36,7 +36,9 @@ def extract_timestamp_and_name(logline):
   if m:
     timestamp = m.group(1)
     name_and_message = m.group(2)
-    n = re.match(r"(.+?): (.*)", name_and_message)
+    n = re.match(r"(.+? \([a-z0-9]+(?:\.[a-z]+)?\)): (.*)", name_and_message)
+    if not n:
+      n = re.match(r"(.+?): (.*)", name_and_message)
     if n:
       name = n.group(1)
       message = n.group(2)
