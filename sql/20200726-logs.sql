@@ -5,3 +5,5 @@ CREATE TABLE `logs` (
 PRIMARY KEY (`log_id`)
 ) ENGINE = ROCKSDB;
 
+INSERT INTO logs (log_dir, log_name) SELECT log_dir, log_name FROM (SELECT DISTINCT log_dir, log_name FROM chat) ch LEFT JOIN logs USING (log_dir, log_name) WHERE log_id IS NULL;
+
