@@ -5,6 +5,7 @@ import pymysql
 import re
 import datetime
 import time
+from cachetools import cached, LRUCache
 from configparser import ConfigParser
 
 bad_files = ["plugin_cookies.txt", "teleport_history.txt", "typed_locations.txt", "search_history.txt"]
@@ -62,12 +63,24 @@ def split_name(name):
     return (name.lower(), name)
   return (None, name)
 
+@cached(LRUCache(1024))
+def get_log_id(logdir, logname):
+  dbcur.execute("SELECT log_id FROM logs WHERE log_dir = %s AND log_name = %s", (logdir, logname))
+  li = dbcur.fetchone()
+  if li:
+    return li[0]
+  else:
+    dbcur.execute("INSERT INTO logs (log_dir, log_name) VALUES (%s, %s)", (logdir, logname))
+    return dbcur.lastrowid
+
 linebuffer = []
 
 def output_lines(lines, left):
   if not lines:
     return
   start_time = time.time()
+  for l in lines:
+    get_log_id(l[0], l[1])
   dbcur.executemany("INSERT INTO chat (log_dir, log_name, bytepos_end, timestamp_raw, timestamp_parsed, user_name, display_name, type, message) VALUES "
     "(%s, %s, %s, %s, %s, %s, %s, %s, %s)", lines);
   dbcon.commit()
@@ -132,3 +145,4 @@ for logdir in logdirs:
   for log in logs:
     sync_log(logdir_name, log, path + "/" + log)
 
+dbcon.close()
