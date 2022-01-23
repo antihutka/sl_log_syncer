@@ -91,6 +91,7 @@ def output_lines(lines, left):
 #    print(l)
 
 def parse_logline(logdir_name, log_name, endpos, logline):
+  logline = logline.lstrip('\x00')
   e = extract_timestamp_and_name(logline)
   if e:
     (timestamp, fullname, message) = e
