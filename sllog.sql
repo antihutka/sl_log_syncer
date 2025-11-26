@@ -55,3 +55,11 @@ ALTER TABLE `chat_hashcounts`
  ADD PRIMARY KEY (`hash`), ADD KEY `count` (`count`);
 ALTER TABLE `chat_usernames`
  ADD PRIMARY KEY (`user_name`), ADD KEY `count` (`count`);
+
+CREATE TABLE IF NOT EXISTS `logs` (
+  `log_id` int(11) NOT NULL AUTO_INCREMENT,
+  `log_dir` varchar(255) NOT NULL,
+  `log_name` varchar(255) NOT NULL,
+  PRIMARY KEY (`log_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
