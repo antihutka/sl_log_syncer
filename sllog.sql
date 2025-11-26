@@ -1,7 +1,7 @@
 -- This is the only table used by the script
 
 CREATE TABLE IF NOT EXISTS `chat` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `log_dir` varchar(255) COLLATE utf8mb4_bin NOT NULL,
   `log_name` varchar(255) COLLATE utf8mb4_bin NOT NULL,
   `bytepos_end` int(11) NOT NULL,
